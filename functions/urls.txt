@@ -1,0 +1,17 @@
+dev: authorise:
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ
+
+
+dev :capture:
+https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+==============================
+prod authorize:
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+
+prod-capture:
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+
+===========================
