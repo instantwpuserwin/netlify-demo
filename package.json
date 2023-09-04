@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "netlify": "netlify link",
+    "dev": "netlify deploy --dev",
     "build": "netlify deploy --prod"
   },
   "keywords": [],
