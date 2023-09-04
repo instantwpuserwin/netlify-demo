@@ -7,7 +7,7 @@ let records = [];
 
 //Get all students
 router.get('/', (req, res) => {
-  res.send('App is running..');
+  res.send('App is running.....');
 });
 
 //Create new record
