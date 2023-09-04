@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "netlify": "netlify link",
-    "dev": "netlify deploy --dev",
+    "dev": "netlify dev --live",
     "build": "netlify deploy --prod"
   },
   "keywords": [],
