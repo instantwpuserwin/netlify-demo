@@ -54,7 +54,7 @@ async function afrm(env_id, txn_type, order_id, transaction_id) {
 
     await sdk.authorize_transaction({
       order_id: order_id,
-      id: transaction_id
+      transaction_id: transaction_id
     }, { accept: '*/*' })
       .then(({ data }) => {
         console.log("In afrm function, data=", data);
