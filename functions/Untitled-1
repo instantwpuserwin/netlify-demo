@@ -1,0 +1,21 @@
+Error: Unable to retrieve URL (https://api.affirm.com/api/v1/transactions). Reason: Bad Request
+Error: Unable to retrieve URL (https://api.affirm.com/api/). Reason: Not Found
+Error: Unable to retrieve URL (https://api.affirm.com/). Reason: Not Found
+
+
+    const sdk = require('api')("https://affirm.com/api/v1/transactions/");
+    await sdk.auth(public_key, private_key);
+    
+    await sdk.authorize_transaction({
+      order_id: order_id,
+      transaction_id: transaction_id
+    }, { accept: '*/*' })
+      .then(({ data }) => {
+        console.log("In afrm function, data=", data);
+        retdata = data;
+      })
+      .catch(err => {
+        console.error("In afrm function, Error=", err.data);
+        retdata = err.data;
+      }
+      );

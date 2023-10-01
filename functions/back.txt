@@ -1,0 +1,109 @@
+<cfhttp result="result" method="GET" charset="utf-8" url="https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ">
+    <cfhttpparam name="q" type="url" value="cfml">
+</cfhttp>
+
+<cfset theData=#result["Filecontent"]#>
+
+<cfif !IsJSON(theData)>
+    <h3>The URL you requested does not provide valid JSON</h3>
+
+    <!--- If the data is in JSON format, deserialize it. --->
+<cfelse>
+    <cfset cfData=DeserializeJSON(theData)>
+    <cfdump var=#cfData# > 
+</cfif>
+
+<cfif structKeyExists(#cfData.afrm#, "status_code")>
+    <cfdump var="status_code Variable exists">
+    <cfdump var=#cfData.afrm.status_code# > 
+    <cfdump var=#cfData.afrm.message# > 
+<cfelse>
+    <cfdump var="Variable does not exist">
+</cfif>
+
+
+<cfif structKeyExists(#cfData.afrm#, "status")>
+    <cfdump var="status Variable exists">
+
+    <cfdump var=#cfData.afrm.status# > 
+    <cfdump var=#cfData.afrm.id# >     
+    <cfdump var=#cfData.afrm.amount# >   
+
+    <cfset AfirmAuthStatus=#cfData.afrm.status# > 
+    <cfset AfirmAuthId=#cfData.afrm.id# > 
+    <cfset AfirmAuthAmount=#cfData.afrm.amount# >         
+<cfelse>
+    <cfdump var="status Variable does not exist">
+</cfif>
+
+
+<cfoutput> 
+    Result:<hr/> #result["Filecontent"]#<br />     <hr/>
+</cfoutput>
+
+<cfsavecontent variable="afrm">
+  <cfoutput>
+    {
+      "authorization_expiration": "2023-09-21T11:20:16Z",
+      "amount_refunded": 0,
+      "events": [
+        {
+          "type": "auth",
+          "id": "JB67HSA79R7WD1Z4",
+          "currency": "USD",
+          "amount": 30100,
+          "created": "2023-08-22T11:20:16Z"
+        }
+      ],
+      "provider_id": 1,
+      "order_id": "JKLMO4321",
+      "id": "DLZX-4606",
+      "checkout_id": "J9MRBF2ITROLYRLQ",
+      "currency": "USD",
+      "remove_tax": false,
+      "status": "authorized",
+      "amount": 30100,
+      "created": "2023-08-22T11:01:34Z"
+    }
+  </cfoutput>
+</cfsavecontent>
+
+<cfif IsJSON(afrm)>
+    <h3>afrm is  a valid JSON: afrm</h3>
+     <cfdump var=#afrm# > <hr/>
+</cfif>
+
+<cfset cfData1=DeserializeJSON(afrm)>
+
+ <h3>cfData1DeserializeJSON(afrm)</h3>
+ <cfdump var=#cfData1# > <hr/>
+
+<cfset statusData=cfData1.status>
+
+
+
+<cfset cfData=DeserializeJSON(theData)>
+
+<cfif IsJSON(cfData1)>
+    <h3>cfData1(DeserializeJSON) is  a valid JSON</h3>
+</cfif>
+
+
+
+
+<cfoutput>
+    cfData1: <hr/>
+    #cfData1#<hr/>
+</cfoutput>
+
+    <cfdump var=#cfData1.status# > 
+    <cfdump var=#cfData1.id# >     
+    <cfdump var=#cfData1.amount# >   
+
+
+<cfset cfAffirmData=SerializeJSON(cfData1)>
+<cfoutput>cfAffirmData: <hr/>#cfAffirmData#<hr/></cfoutput>
+<cfif IsJSON(cfAffirmData)>
+    <h3>cfAffirmData is  a valid JSON</h3>
+</cfif>
+<cfdump var=#cfAffirmData.status# > 
