@@ -8,60 +8,97 @@ const txn_type_capture = "capture";
 
 let records = [];
 
+router.get('/test', async (req, res) => {
+  var origin = req.get('origin');
+  var host = req.get('host');
+
+  var origin2 = req.header('Origin');
+  var host2 = req.header('Host');
+  var DomainReferer = req.header('Referer') == null ? "" : req.header('Referer').toLowerCase();
+
+  var validDomain = DomainReferer.includes("www.diamondandgoldwarehouse.com");
+
+
+  var debugmesg = "In app get, origin=" + origin + ", host=" + host + ", origin2=" + origin2 + " ,host2=" + host2 + ", DomainReferer:" + DomainReferer + ", req.headers.origin=" + req.headers.origin + ", req.originalUrl" + req.protocol + '://' + req.host + req.originalUrl + ", validDomain=" + validDomain;
+
+  console.log(debugmesg);
+
+  res.json(debugmesg);
+}
+);
+
 router.get('/dia/afrm/:env_id/:txn_type/:ordid/:txnid', async (req, res) => {
-//router.get('/dia/afrm/:env_id/:txn_type/:ordid/:txnid', async (req, res) => {
+  //router.get('/dia/afrm/:env_id/:txn_type/:ordid/:txnid', async (req, res) => {
 
-  const env_id = req.params.env_id;
-  const txn_type = req.params.txn_type;
-  const order_id = req.params.ordid;
-  const transaction_id = req.params.txnid;
-  console.log("In app get, ", "env_id=", env_id, ", txn_type= =", txn_type, ", order_id=", order_id, ", transaction_id=", transaction_id);
+  var DomainReferer = req.header('Referer') == null ? "" : req.header('Referer').toLowerCase();
 
-  var afrmdata = await afrm(env_id, txn_type, order_id, transaction_id);
-  console.log("In app get, afrmdata=", afrmdata);
-  res.json({ afrm: afrmdata })
+  var validDomain = DomainReferer.includes("www.diamondandgoldwarehouse.com");
 
+  //validDomain = true;
+  //console.log("DomainReferer=", DomainReferer, ", validDomain=", validDomain);
+
+  if (!validDomain) {
+    res.json({ err: "invalid domain" });
+    return;
+  }
+  else {
+    const env_id = req.params.env_id;
+    const txn_type = req.params.txn_type;
+    const order_id = req.params.ordid;
+    const transaction_id = req.params.txnid;
+    //console.log("In app get, ", "env_id=", env_id, ", txn_type= =", txn_type, ", order_id=", order_id, ", transaction_id=", transaction_id);
+
+    var afrmdata = await afrm(env_id, txn_type, order_id, transaction_id);
+    //console.log("In app get, afrmdata=", afrmdata);
+    res.json({ afrm: afrmdata })
+  }
 }
 );
 
 
 async function afrm(env_id, txn_type, order_id, transaction_id) {
 
-  console.log("In afrm function, txn_type =", txn_type, "env_id=", env_id, "order_id=", order_id, ", transaction_id=", transaction_id);
+  //console.log("In afrm function, txn_type =", txn_type, "env_id=", env_id, "order_id=", order_id, ", transaction_id=", transaction_id);
 
-  var auth_url = "", public_key = "", private_key = "", 
-  capture_url="", sb_url="https://sandbox.affirm.com/api/v1", prod_url="https://sandbox.affirm.com/api/v1";
+  var auth_url = "", public_key = "", private_key = "",
+    capture_url = "", sb_url = "https://sandbox.affirm.com/api/v1", prod_url = "https://api.affirm.com/api/v1/",     prod_txn_server_url="https://api.affirm.com/api/v1", txn_auth_url=""; 
 
   if (env_id === "sb") {
-    auth_url = '@affirm-developers/v2.0#lra732k0ljrje2ac';
+    txn_auth_url = '@affirm-developers/v2.0#lra732k0ljrje2ac';
     public_key = 'HQP4H5GN8SPPBVVA';
     private_key = 'L0NtZiaz5Q0PUZqWfcS4C9PuGM9XJhF0';
-    capture_url=sb_url;
+    capture_url = sb_url;
   }
 
   if (env_id === "prod") {
-    auth_url = '@affirm-developers/v2.0#lra732k0ljrje2ac';
-    public_key = 'HQP4H5GN8SPPBVVA';
-    private_key = 'L0NtZiaz5Q0PUZqWfcS4C9PuGM9XJhF0';  
-    capture_url=prod_url;
+    txn_auth_url = '@affirm-developers/v2.0#3pywt32llzjpmvf';
+    //auth_url = prod_url;
+    public_key = 'VXZC558QAAR0KED1';
+    private_key = 'QWPvVZodEQlb8IYeL2SgP5OoEvKPwAS5';
+    capture_url = prod_url;
   }
 
-  const sdk = require('api')(auth_url);
+  //const sdk = require('api')(auth_url);
   var retdata = null;
-  await sdk.auth(public_key, private_key);
+  //await sdk.auth(public_key, private_key);
 
   if (txn_type === txn_type_auth) {
-
+ 
+    const sdk = require('api')(txn_auth_url);
+    await sdk.auth(public_key, private_key);
+    
+    if (env_id === "prod") sdk.server(prod_txn_server_url);
+    
     await sdk.authorize_transaction({
       order_id: order_id,
       transaction_id: transaction_id
     }, { accept: '*/*' })
       .then(({ data }) => {
-        console.log("In afrm function, data=", data);
+        //console.log("In afrm function, data=", data);
         retdata = data;
       })
       .catch(err => {
-        console.error("In afrm function, Error=", err.data);
+        //console.error("In afrm function, Error=", err.data);
         retdata = err.data;
       }
       );
@@ -69,17 +106,19 @@ async function afrm(env_id, txn_type, order_id, transaction_id) {
 
   if (txn_type === txn_type_capture) {
 
+    const sdk = require('api')(txn_auth_url);
+    await sdk.auth(public_key, private_key);
+
     await sdk.server(capture_url);
-    await sdk.capture_transaction({
-      order_id: order_id,
-      id: transaction_id
-    }, { accept: '*/*' })
+
+
+    await sdk.capture_transaction({ order_id: order_id }, { id: transaction_id, accept: '*/*' })
       .then(({ data }) => {
-        console.log("In afrm function, data=", data);
+        //console.log("In afrm function, data=", data);
         retdata = data;
       })
       .catch(err => {
-        console.error("In afrm function, Error=", err.data);
+        //console.error("In afrm function, Error=", err.data);
         retdata = err.data;
       }
       );
@@ -88,7 +127,7 @@ async function afrm(env_id, txn_type, order_id, transaction_id) {
 
 
 
-  console.error("In afrm function, retdata=", retdata);
+  //console.error("In afrm function, retdata=", retdata);
   return retdata;
 
 }

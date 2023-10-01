@@ -1,12 +1,43 @@
-dev: authorise:
+ test local: npm run dev
+ prod build:  npm run build
+
+=============================
+test domain valid:
+https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+==================================
+
+
+test-referer-host-origin.html
+https://www.diamondandgoldwarehouse.com/test-referer-host-origin.html
+
+prod: test get
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/test
+
+sb: authorise:
 https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ
 
+prod: authorise:
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/prod/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ
 
-dev :capture:
-https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+dev prod: authorise:
+https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/prod/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ
+
+
+dev local prod authtxn:
+https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/prod/authtxn/JKLMO4321/J9MRBF2ITROLYRLQ
+
+
+dev local prod capture:
+https://64573a41--magnificent-stroopwafel-b71100.netlify.live/.netlify/functions/api/dia/afrm/prod/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+ 
 ==============================
-prod authorize:
+sb authorize:
 https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/sb/capture/JKLMO4321/J9MRBF2ITROLYRLQ
+
+prod authorize:
+https://magnificent-stroopwafel-b71100.netlify.app/.netlify/functions/api/dia/afrm/prod/capture/JKLMO4321/J9MRBF2ITROLYRLQ
 
 
 prod-capture:
