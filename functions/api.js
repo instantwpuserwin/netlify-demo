@@ -1,5 +1,7 @@
 const express = require('express');
 const serverless = require('serverless-http');
+const requestIP = require('request-ip');
+const IP = require('ip');
 const app = express();
 const router = express.Router();
 
@@ -18,8 +20,12 @@ router.get('/test', async (req, res) => {
 
   var validDomain = DomainReferer.includes("www.diamondandgoldwarehouse.com");
 
+  const ipAddress1 = IP.address();
+  const ipAddress2 =requestIP.getClientIp(req); 
+  const ipAddress3 = req.header('x-forwarded-for') ||	req.socket.remoteAddress;
 
-  var debugmesg = "In app get, origin=" + origin + ", host=" + host + ", origin2=" + origin2 + " ,host2=" + host2 + ", DomainReferer:" + DomainReferer + ", req.headers.origin=" + req.headers.origin + ", req.originalUrl" + req.protocol + '://' + req.host + req.originalUrl + ", validDomain=" + validDomain;
+  var debugmesg = "ipAddress1=" + ipAddress1   + ", ipAddress2=" + ipAddress2  + ", ipAddress3=" + ipAddress3  
+ 
 
   console.log(debugmesg);
 
@@ -30,18 +36,18 @@ router.get('/test', async (req, res) => {
 router.get('/dia/afrm/:env_id/:txn_type/:ordid/:txnid', async (req, res) => {
   //router.get('/dia/afrm/:env_id/:txn_type/:ordid/:txnid', async (req, res) => {
 
-  var DomainReferer = req.header('Referer') == null ? "" : req.header('Referer').toLowerCase();
+  const ipAddress = req.header('x-forwarded-for') ||	req.socket.remoteAddress;
 
-  var validDomain = DomainReferer.includes("www.diamondandgoldwarehouse.com");
+  var validDomain = ipAddress.includes("5.172.176.161");
 
   //validDomain = true;
-  //console.log("DomainReferer=", DomainReferer, ", validDomain=", validDomain);
+  console.log("ipAddress=", ipAddress, ", validDomain=", validDomain);
 
-  if (!validDomain) {
-    res.json({ err: "invalid domain" });
-    return;
-  }
-  else {
+   if (!validDomain) {
+     res.json({ err: "invalid domain, Domain referer= " + DomainReferer });
+     return;
+   }
+   else {
     const env_id = req.params.env_id;
     const txn_type = req.params.txn_type;
     const order_id = req.params.ordid;
